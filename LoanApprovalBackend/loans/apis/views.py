@@ -1,3 +1,6 @@
+import pickle
+import traceback
+
 import joblib
 import pandas as pd
 from django.http import JsonResponse
@@ -31,7 +34,19 @@ class PredictLoanAPIView(APIView):
         try:
             payload = LoanSerializer(data=request.data)
             if payload.is_valid():
-                model = joblib.load('loans/models/loan_model.pkl')
+
+                # Load the pre-trained model
+                absolute_path = 'C:/Users/HP/Desktop/final_year_capstone/LoanApprovalBackend/loans/models/loan_model.pkl'
+                model = pickle.load(open(absolute_path, "rb"))
+                logger.info(f"Loan: model loaded successfully")
+
+                # Load the category mapping (for consistent encoding)
+                category_mapping_path = 'C:/Users/HP/Desktop/final_year_capstone/LoanApprovalBackend/loans/models/category_mapping.pkl'
+                with open(category_mapping_path, 'rb') as f:
+                    category_mapping = pickle.load(f)
+                logger.info(f"Loan: category mapping loaded successfully")
+
+
                 data = payload.data
 
                 # unpack data
@@ -66,36 +81,70 @@ class PredictLoanAPIView(APIView):
                 # predict loan
                 logger.info(f"Loan: prepare data for prediction -> {company_name}")
 
-                loan_data = [gross_approval, term, number_of_employees, new_business, urban, industry, industry_trends]
+                loans_data = [
+                    data["gross_approval"],
+                    data["term"],
+                    data["number_of_employees"],
+                    data["new_business"],
+                    data["urban"],
+                    data["industry"],
+                    industry_trends
+                ]
+                logger.info(f"Loan: loan data ->  {loans_data}")
                 columns = ['GrAppv', 'Term', 'NoEmp', 'NewExist', 'UrbanRural', 'Industry', 'Industry Trends']
-                dataframe = pd.DataFrame([loan_data], columns=columns)
+                prediction_data = pd.DataFrame([loans_data], columns=columns)
 
-                prediction = model.predict(dataframe)
+                # Apply the category mapping to ensure consistent encoding
+                encoded_prediction_df = pd.DataFrame()
 
-                logger.info(f"Loan: prediction -> {prediction}")
-
-
-                if prediction[0] == 1:
-                    loan.mis_status = "True"
-                    # save
-                    loan.save()
+                for column in prediction_data.columns:
+                    if column in category_mapping:
+                        # Apply category mapping to convert to codes
+                        prediction_data[column] = prediction_data[column].astype('category').cat.set_categories(
+                            category_mapping[column], ordered=False)
+                        encoded_prediction_df[column] = prediction_data[column].cat.codes
+                    else:
+                        encoded_prediction_df[column] = prediction_data[column]
+                try:
+                    prediction = model.predict(encoded_prediction_df)
+                    logger.info(f"Loan: prediction -> {prediction}")
+                    if prediction[0] == 1:
+                        loan.mis_status = "True"
+                        # save
+                        loan.save()
+                        logger.info(f"Loan: loan approved -> {company_name}")
+                        return JsonResponse({
+                            'status_code': 200,
+                            'message': 'Loan approved',
+                            'success': True
+                        }, status=200)
+                    else:
+                        loan.mis_status = "False"
+                        # save
+                        loan.save()
+                        logger.info(f"Loan: loan denied -> {company_name}")
+                        return JsonResponse({
+                            'status_code': 200,
+                            'message': 'Loan denied',
+                            'success': True
+                        }, status=200)
+                except Exception as e:
                     return JsonResponse({
-                        'status_code': 200,
-                        'message': 'Loan approved',
-                        'success': True
-                    }, status=200)
-                else:
-                    loan.mis_status = "False"
-                    # save
-                    loan.save()
-                    return JsonResponse({
-                        'status_code': 200,
-                        'message': 'Loan denied',
-                        'success': True
-                    }, status=200)
+                        'status_code': 500,
+                        'message': f"Prediction error: {str(e)}",
+                        'success': False
+                    },
+                        status=500
+                    )
+            else:
+                return JsonResponse({
+                    'status_code': 400,
+                    'message': "Invalid payload",
+                    'success': False
+                }, status=400)
         except Exception as e:
             # log error
-            logger.error(f"Loan: error processing loan, -> {e.message}")
+            logger.error(f"Loan: error processing loan, -> {traceback.format_exc()}")
             return JsonResponse({
                 'status_code': 500,
                 'message': str(e),

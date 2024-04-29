@@ -4,4 +4,5 @@ env/
 ./LoanApprovalBackend/.venv/
 ./LoanApprovalBackend/env/
 ./LoanApprovalBackend/.env
-"SBA Loan Approval notebook/data/SBAnational/SBAnational.csv"
+SBA Loan Approval notebook/data/SBAnational/
+LoanApprovalBackend/loans/models/*.pkl
