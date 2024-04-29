@@ -1,5 +1,6 @@
 env/
 .env
+./SBA Loan Approval notebook/models/*.pkl
 ./LoanApprovalBackend/.venv/
 ./LoanApprovalBackend/env/
 ./LoanApprovalBackend/.env
