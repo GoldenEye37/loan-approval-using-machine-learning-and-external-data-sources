@@ -1,6 +1,7 @@
 .venv/
 env/
 */migrations/*
+loans/models/*.pkl
 .env
 .env.prod
 *.pyc
