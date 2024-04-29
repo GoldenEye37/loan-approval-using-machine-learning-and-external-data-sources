@@ -43,6 +43,8 @@ class PredictLoanAPIView(APIView):
                 urban = data['urban']
                 industry = data['industry']
 
+                logger.info(f"Loan: data unpacked successfully -> {company_name}")
+
                 # todo get live industry trend
                 industry_trends = fetch_industry_trends(industry)
 
@@ -62,13 +64,18 @@ class PredictLoanAPIView(APIView):
                 )
 
                 # predict loan
+                logger.info(f"Loan: prepare data for prediction -> {company_name}")
+
                 loan_data = [gross_approval, term, number_of_employees, new_business, urban, industry, industry_trends]
                 columns = ['GrAppv', 'Term', 'NoEmp', 'NewExist', 'UrbanRural', 'Industry', 'Industry Trends']
                 dataframe = pd.DataFrame([loan_data], columns=columns)
 
                 prediction = model.predict(dataframe)
 
-                if prediction == 1:
+                logger.info(f"Loan: prediction -> {prediction}")
+
+
+                if prediction[0] == 1:
                     loan.mis_status = "True"
                     # save
                     loan.save()
