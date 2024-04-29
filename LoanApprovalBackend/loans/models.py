@@ -28,8 +28,8 @@ class Loan(models.Model):
     company_name = models.CharField(max_length=255, null=False, blank=False)
     gross_approval = models.DecimalField(max_digits=10, decimal_places=2)
     term = models.IntegerField(max_length=50, null=False, blank=False)
-    number_of_employees = models.IntegerField(max_length=50, null=False, blank=False)
-    new_business = models.BooleanField(default=False, null=False, blank=False)
+    number_of_employees = models.IntegerField(null=False, blank=False)
+    new_business = models.IntegerField(null=False, blank=False)
     urban = models.BooleanField(default=False, null=False, blank=False)
     industry = models.CharField(max_length=255, null=False, blank=False)
     industry_trends = models.CharField(max_length=255,
