@@ -4,4 +4,4 @@ env/
 ./LoanApprovalBackend/.venv/
 ./LoanApprovalBackend/env/
 ./LoanApprovalBackend/.env
-data/SBAnational/SBAnational.csv
+"SBA Loan Approval notebook/data/SBAnational/SBAnational.csv"
