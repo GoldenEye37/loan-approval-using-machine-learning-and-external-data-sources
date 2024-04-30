@@ -1,5 +1,6 @@
 from decouple import config
 from loguru import logger
+from serpapi import GoogleSearch
 
 
 def search_text(industry):
@@ -30,6 +31,18 @@ def search_text(industry):
     print(industry_search_text)
 
 
+def format_news_results(news_results):
+    formatted_industry_news = []
+
+    for news_item in news_results:
+        formatted_industry_news.append({
+            'id': news_item.get('position', 'Unknown Position'),
+            'title': news_item.get('title', 'Unknown Title'),
+            'news_source': news_item.get('source', {}).get('name', 'Unknown Source'),
+            'date_posted': news_item.get('date', 'Unknown Date')
+        })
+    return formatted_industry_news
+
 def fetch_trends(industry):
     try:
         # setup params for search
@@ -43,6 +56,11 @@ def fetch_trends(industry):
             "google_domain": "google.com",
             "output": "json"}
         # fetch trends
+        search = GoogleSearch(params)
+        results = search.get_dict()
+        news_results = results.get("news_results")
+        
+        format_results = format_news_results(news_results)
     except Exception as e:
         logger.error(f"Error fetching industry trends -> {e}")
         return False
