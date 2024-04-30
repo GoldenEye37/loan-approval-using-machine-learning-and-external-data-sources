@@ -62,6 +62,7 @@ def fetch_trends(industry):
             "google_domain": "google.com",
             "output": "json"}
         logger.info(f"Fetching industry trends for {industry} -> {params}")
+
         # fetch trends
         search = GoogleSearch(params)
         results = search.get_dict()
@@ -77,11 +78,30 @@ def fetch_trends(industry):
         return False
 
 
+def get_current_year_news(industry_trends, current_year):
+    #  initialize a dictionary
+    industry_results_2024 = {}
+
+    # get 2024 results only
+    for industry, news_items in industry_trends.items():
+        news_items_2024 = [
+            item for item in news_items if
+            datetime.strptime(item['date_posted'], '%m/%d/%Y, %I:%M %p, %z UTC').year >= current_year
+        ]
+
+        industry_results_2024[industry] = news_items_2024
+        logger.info(f"{industry}: {len(news_items_2024)} counts")
+    return industry_results_2024
+
+
 def fetch_industry_trends(industry):
     """Fetch industry trends using SERPAI and perform sentiment analysis using textblob."""
     # fetch industry trends
     try:
         industry_trends = fetch_trends(industry)
+        # get current year news only
+        current_year = datetime.now().year
+        current_year_news = get_current_year_news(industry_trends, current_year)
     except Exception as e:
         logger.error(f"Error fetching industry trends -> {e}")
         return False
