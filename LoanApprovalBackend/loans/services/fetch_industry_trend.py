@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from decouple import config
 from loguru import logger
 from serpapi import GoogleSearch
@@ -41,10 +43,14 @@ def format_news_results(news_results):
             'news_source': news_item.get('source', {}).get('name', 'Unknown Source'),
             'date_posted': news_item.get('date', 'Unknown Date')
         })
+        logger.info(f"Formatted industry news")
     return formatted_industry_news
+
 
 def fetch_trends(industry):
     try:
+        industry_results = {}
+
         # setup params for search
         params = {
             "api_key": config("SERPAPI_API_KEY"),
@@ -55,12 +61,17 @@ def fetch_trends(industry):
             "gl": "us",
             "google_domain": "google.com",
             "output": "json"}
+        logger.info(f"Fetching industry trends for {industry} -> {params}")
         # fetch trends
         search = GoogleSearch(params)
         results = search.get_dict()
+        logger.info(f"Industry trends fetched successfully -> {results}")
+
         news_results = results.get("news_results")
-        
-        format_results = format_news_results(news_results)
+
+        # this creates a dictionary with the industry as the key and the news results as the value
+        industry_results[industry] = format_news_results(news_results)
+        return industry_results
     except Exception as e:
         logger.error(f"Error fetching industry trends -> {e}")
         return False
