@@ -3,6 +3,7 @@ from datetime import datetime
 from decouple import config
 from loguru import logger
 from serpapi import GoogleSearch
+from textblob import TextBlob
 
 
 def search_text(industry):
@@ -94,6 +95,37 @@ def get_current_year_news(industry_trends, current_year):
     return industry_results_2024
 
 
+def perform_sentiment_analysis(industry_news_2024):
+    industry_sentiments = {}
+
+    for industry, news_items in industry_news_2024.items():
+        # Initialize variables to store overall sentiment polarity
+        total_polarity = 0
+        num_articles = len(news_items)
+
+        # Perform sentiment analysis for each news item
+        for news in news_items:
+            news_heading = news["title"]
+            news_polarity = TextBlob(news_heading).sentiment.polarity
+            total_polarity += news_polarity
+
+        # Calculate average polarity
+        average_polarity = total_polarity / num_articles
+
+        # Classify overall sentiment
+        if average_polarity > 0:
+            overall_sentiment = 'positive'
+        elif average_polarity < 0:
+            overall_sentiment = 'negative'
+        else:
+            overall_sentiment = 'neutral'
+
+        industry_sentiments[industry] = overall_sentiment
+    # log sentiment analysis summary
+    logger.info(f"Industry sentiment analysis -> {industry_sentiments}")
+    return industry_sentiments
+
+
 def fetch_industry_trends(industry):
     """Fetch industry trends using SERPAI and perform sentiment analysis using textblob."""
     # fetch industry trends
@@ -101,7 +133,13 @@ def fetch_industry_trends(industry):
         industry_trends = fetch_trends(industry)
         # get current year news only
         current_year = datetime.now().year
-        current_year_news = get_current_year_news(industry_trends, current_year)
+        industry_news_2024 = get_current_year_news(industry_trends, current_year)
+
+        # perform sentiment analysis on the news using textblob
+        industry_sentiments = perform_sentiment_analysis(industry_news_2024)
+        logger.info(f"Industry trends fetched successfully -> {industry_sentiments}")
+
+        return industry_sentiments[industry]
     except Exception as e:
         logger.error(f"Error fetching industry trends -> {e}")
         return False
