@@ -12,7 +12,7 @@ from django.http import JsonResponse
 
 
 from loans.apis.serializers import LoanSerializer
-from loans.models import Loan
+from loans.models import Loan, Industry
 from loans.services.fetch_industry_trend import fetch_industry_trends
 
 
@@ -36,12 +36,12 @@ class PredictLoanAPIView(APIView):
             if payload.is_valid():
 
                 # Load the pre-trained model
-                absolute_path = 'C:/Users/HP/Desktop/final_year_capstone/LoanApprovalBackend/loans/models/loan_model.pkl'
+                absolute_path = '/loans/ml_models/loan_model.pkl'
                 model = pickle.load(open(absolute_path, "rb"))
                 logger.info(f"Loan: model loaded successfully")
 
                 # Load the category mapping (for consistent encoding)
-                category_mapping_path = 'C:/Users/HP/Desktop/final_year_capstone/LoanApprovalBackend/loans/models/category_mapping.pkl'
+                category_mapping_path = '/loans/ml_models/category_mapping.pkl'
                 with open(category_mapping_path, 'rb') as f:
                     category_mapping = pickle.load(f)
                 logger.info(f"Loan: category mapping loaded successfully")
@@ -57,6 +57,18 @@ class PredictLoanAPIView(APIView):
                 new_business = data['new_business']
                 urban = data['urban']
                 industry = data['industry']
+
+
+                # check if industry exists
+                industry = Industry.objects.filter(name=industry).first()
+                logger.info(f"Loan: industry: -> {industry}")
+
+                if not industry:
+                    return JsonResponse({
+                        'status_code': 400,
+                        'message': "Industry not found",
+                        'success': False
+                    }, status=400)
 
                 logger.info(f"Loan: data unpacked successfully -> {company_name}")
 
@@ -75,7 +87,6 @@ class PredictLoanAPIView(APIView):
                     new_business=new_business,
                     urban=urban,
                     industry=industry,
-                    industry_trends=industry_trends
                 )
 
                 # predict loan
