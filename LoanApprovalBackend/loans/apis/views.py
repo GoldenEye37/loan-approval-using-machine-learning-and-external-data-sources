@@ -72,8 +72,9 @@ class PredictLoanAPIView(APIView):
 
                 logger.info(f"Loan: data unpacked successfully -> {company_name}")
 
-                # todo get live industry trend
-                industry_trends = fetch_industry_trends(industry)
+                # todo we now get industry trends from the database
+                industry_trends = industry.trends
+                logger.info(f"Loan: industry trends -> {industry_trends}")
 
                 # dummy industry trend
                 industry_trends = 'positive'

@@ -127,7 +127,11 @@ def perform_sentiment_analysis(industry_news_2024):
 
 
 def fetch_industry_trends(industry):
-    """Fetch industry trends using SERPAPI and perform sentiment analysis using textblob."""
+    """
+    The purpose of this function is to update industry trends in the database at a stipulated time.
+    Fetch industry trends using SERPAPI and perform sentiment analysis using textblob.
+    :param industry: industry name"""
+
     # fetch industry trends
     try:
         industry_trends = fetch_trends(industry)
