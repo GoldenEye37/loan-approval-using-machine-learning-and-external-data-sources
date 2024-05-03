@@ -41,6 +41,9 @@ INSTALLED_APPS = [
 
     # third party apps
     'rest_framework',
+    'django_celery_beat',
+    'django_celery_results',
+
 
     # apps
     'loans',
