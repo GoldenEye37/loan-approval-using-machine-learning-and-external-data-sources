@@ -31,7 +31,7 @@ def search_text(industry):
                   ]
 
     industry_search_text = {industry: f"{industry} market trends in Zimbabwe" for industry in industries}
-    print(industry_search_text)
+    return industry_search_text
 
 
 def format_news_results(news_results):
@@ -127,7 +127,7 @@ def perform_sentiment_analysis(industry_news_2024):
 
 
 def fetch_industry_trends(industry):
-    """Fetch industry trends using SERPAI and perform sentiment analysis using textblob."""
+    """Fetch industry trends using SERPAPI and perform sentiment analysis using textblob."""
     # fetch industry trends
     try:
         industry_trends = fetch_trends(industry)
