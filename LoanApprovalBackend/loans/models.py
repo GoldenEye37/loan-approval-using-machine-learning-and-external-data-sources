@@ -20,6 +20,7 @@ class MIS_Status(models.TextChoices):
 
 class Industry(models.Model):
     """Industry model."""
+    industry_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=255, null=False, blank=False)
     trends = models.CharField(max_length=255, null=False, blank=False, choices=Trend_choice.choices,
                              default=Trend_choice.STABLE)
