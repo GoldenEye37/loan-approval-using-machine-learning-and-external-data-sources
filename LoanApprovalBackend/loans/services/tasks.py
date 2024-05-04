@@ -16,12 +16,17 @@ def fetch_and_update_industries_trends_task():
     Fetch and update industry trends
     """
     try:
-        logger.info(f"Task: Fetching industry trends")
+        logger.info(f"Task: Fetching industry trends from database.")
         industries = Industry.objects.all()
 
         # todo remove slicing
+        logger.info(f"Task: sliced industries -> {industries[:1]}")
         for industry in industries[:1]:
+            logger.info(f"Task: Industry -> {industry.name}")
             industry_trends = fetch_industry_trends(industry.name)
+            if industry_trends is False:
+                logger.error(f"Task: Error fetching industry trends -> {industry.name}")
+                return False
             logger.info(f"Task: Fetched industry trends -> {industry_trends}")
 
             # update industry trends
