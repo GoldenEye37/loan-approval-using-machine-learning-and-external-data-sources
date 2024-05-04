@@ -7,36 +7,15 @@ from textblob import TextBlob
 
 
 def search_text(industry):
-    # Industries
-    industries = ['Agriculture, forestry, fishing, hunting',
-                  'Mining, quarrying, oil and gas extraction',
-                  'Utilities',
-                  'Construction',
-                  'Manufacturing',
-                  'Wholesale_trade',
-                  'Retail_trade',
-                  'Transportation, warehousing',
-                  'Information',
-                  'Finance, Insurance',
-                  'Real estate, rental, leasing',
-                  'Professional, scientific, technical services',
-                  'Management of companies, enterprises',
-                  'Administrative support, waste management',
-                  'Educational',
-                  'Healthcare, Social_assist',
-                  'Arts, Entertain, recreation',
-                  'Accomodation, Food services',
-                  'Other services',
-                  'Public adminstration'
-                  ]
-
-    industry_search_text = {industry: f"{industry} market trends in Zimbabwe" for industry in industries}
+    # Industry search text
+    industry_search_text = f"{industry} market trends in Zimbabwe"
+    logger.info(f"Industry search text -> {industry_search_text}")
     return industry_search_text
 
 
 def format_news_results(news_results):
     formatted_industry_news = []
-
+    logger.info(f"Formatting industry news.")
     for news_item in news_results:
         formatted_industry_news.append({
             'id': news_item.get('position', 'Unknown Position'),
@@ -44,14 +23,14 @@ def format_news_results(news_results):
             'news_source': news_item.get('source', {}).get('name', 'Unknown Source'),
             'date_posted': news_item.get('date', 'Unknown Date')
         })
-        logger.info(f"Formatted industry news")
+        logger.info(f"Successfully formatted industry news")
     return formatted_industry_news
 
 
-def fetch_trends(industry):
+def fetch_news_from_serpapi(industry):
     try:
         industry_results = {}
-
+        logger.info(f"Inside fetch_news_from_serpapi function.")
         # setup params for search
         params = {
             "api_key": config("SERPAPI_API_KEY"),
@@ -62,17 +41,18 @@ def fetch_trends(industry):
             "gl": "us",
             "google_domain": "google.com",
             "output": "json"}
-        logger.info(f"Fetching industry trends for {industry} -> {params}")
+        logger.info(f"Fetching industry news for {industry} from serpapi.")
 
         # fetch trends
         search = GoogleSearch(params)
         results = search.get_dict()
-        logger.info(f"Industry trends fetched successfully -> {results}")
+        logger.info(f"Results fetched successfully.")
 
         news_results = results.get("news_results")
 
         # this creates a dictionary with the industry as the key and the news results as the value
         industry_results[industry] = format_news_results(news_results)
+        logger.info(f"Industry news fetched successfully")
         return industry_results
     except Exception as e:
         logger.error(f"Error fetching industry trends -> {e}")
@@ -84,6 +64,7 @@ def get_current_year_news(industry_trends, current_year):
     industry_results_2024 = {}
 
     # get 2024 results only
+    logger.info(f"Getting current year news.")
     for industry, news_items in industry_trends.items():
         news_items_2024 = [
             item for item in news_items if
@@ -91,7 +72,7 @@ def get_current_year_news(industry_trends, current_year):
         ]
 
         industry_results_2024[industry] = news_items_2024
-        logger.info(f"{industry}: {len(news_items_2024)} counts")
+        logger.info(f"{industry} has: {len(news_items_2024)} counts")
     return industry_results_2024
 
 
@@ -100,6 +81,7 @@ def perform_sentiment_analysis(industry_news_2024):
 
     for industry, news_items in industry_news_2024.items():
         # Initialize variables to store overall sentiment polarity
+        logger.info(f"Performing sentiment analysis for {industry}.")
         total_polarity = 0
         num_articles = len(news_items)
 
@@ -134,7 +116,10 @@ def fetch_industry_trends(industry):
 
     # fetch industry trends
     try:
-        industry_trends = fetch_trends(industry)
+        logger.info(f"Fetching industry trends invoked.")
+        industry_trends = fetch_news_from_serpapi(industry)
+        if industry_trends is False:
+            return False
         # get current year news only
         current_year = datetime.now().year
         industry_news_2024 = get_current_year_news(industry_trends, current_year)
