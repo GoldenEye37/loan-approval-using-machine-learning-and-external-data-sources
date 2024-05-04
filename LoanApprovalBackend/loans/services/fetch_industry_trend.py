@@ -14,6 +14,8 @@ def search_text(industry):
 
 
 def format_news_results(news_results):
+    logger.info(f"News results -> {news_results}")
+
     formatted_industry_news = []
     logger.info(f"Formatting industry news.")
     for news_item in news_results:
@@ -34,7 +36,7 @@ def fetch_news_from_serpapi(industry):
         # setup params for search
         params = {
             "api_key": config("SERPAPI_API_KEY"),
-            "engine": "google",
+            "engine": "google_news",
             "q": search_text(industry),
             "location": "Zimbabwe",
             "hl": "en",
@@ -47,6 +49,7 @@ def fetch_news_from_serpapi(industry):
         search = GoogleSearch(params)
         results = search.get_dict()
         logger.info(f"Results fetched successfully.")
+        logger.info(f"Results -> {results}")
 
         news_results = results.get("news_results")
 
