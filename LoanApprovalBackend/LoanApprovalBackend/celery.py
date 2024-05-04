@@ -1,9 +1,11 @@
 import os
 
+# celery imports
 from celery import Celery
 from celery.schedules import crontab
 
-# config celery
+# task imports
+from loans.services.tasks import fetch_and_update_industries_trends_task, test_task
 
 
 # default settings
@@ -22,10 +24,10 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'fetch-industry-trends': {
         'task': 'fetch_and_update_industries_trends_task',
-        'schedule': crontab(day_of_week="7"),
+        'schedule': crontab(day_of_week="6"),
     },
     'test-task': {
         'task': 'test_task',
-        'schedule': 5.0,
+        'schedule': 50.0,
     }
 }
