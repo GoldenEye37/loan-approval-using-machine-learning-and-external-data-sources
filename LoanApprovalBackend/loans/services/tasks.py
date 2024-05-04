@@ -1,19 +1,20 @@
+import logging
+
 from celery import shared_task
 from loguru import logger
 
 from loans.models import Industry
 from loans.services.fetch_industry_trend import fetch_industry_trends
 
+# logger = logging.getLogger(__name__)
+
 
 # create task to fetch industry trends
-@shared_task(bind=True, name='fetch_industry_trends')
-def fetch_and_update_industries_trends_task(self):
+@shared_task
+def fetch_and_update_industries_trends_task():
     """
     Fetch and update industry trends
-    :param self:
-    :return:
     """
-
     try:
         logger.info(f"Task: Fetching industry trends")
         industries = Industry.objects.all()
@@ -34,7 +35,7 @@ def fetch_and_update_industries_trends_task(self):
 
 
 # create test task to test celery
-@shared_task(bind=True, name='test_task')
-def test_task(self):
-    logger.info(f"Task: Testing task")
-    return True
+@shared_task
+def test_task():
+    logger.info(f"Task: Adding task")  # Log the task result
+    return 5 + 4
