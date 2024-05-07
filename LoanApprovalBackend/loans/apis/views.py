@@ -1,3 +1,4 @@
+import os
 import pickle
 import traceback
 
@@ -36,12 +37,13 @@ class PredictLoanAPIView(APIView):
             if payload.is_valid():
 
                 # Load the pre-trained model
-                absolute_path = '/loans/ml_models/loan_model.pkl'
+                # Get the absolute path to the current working directory
+                absolute_path = "loans/ml_models/loan_model.pkl"
                 model = pickle.load(open(absolute_path, "rb"))
                 logger.info(f"Loan: model loaded successfully")
 
                 # Load the category mapping (for consistent encoding)
-                category_mapping_path = '/loans/ml_models/category_mapping.pkl'
+                category_mapping_path = 'loans/ml_models/category_mapping.pkl'
                 with open(category_mapping_path, 'rb') as f:
                     category_mapping = pickle.load(f)
                 logger.info(f"Loan: category mapping loaded successfully")
@@ -151,7 +153,7 @@ class PredictLoanAPIView(APIView):
             else:
                 return JsonResponse({
                     'status_code': 400,
-                    'message': "Invalid payload",
+                    'message': f"Invalid payload: {payload.errors}",
                     'success': False
                 }, status=400)
         except Exception as e:
