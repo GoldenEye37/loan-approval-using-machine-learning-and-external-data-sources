@@ -5,7 +5,7 @@ import {Navigate, Outlet, Route, Routes} from "react-router-dom";
 
 function App() {
   return (
-      <main className="flex items-center justify-center h-screen m-6">
+      <main>
         <Routes>
           <Route path="/" element={<Navigate to="/home"/>}/>
         </Routes>
