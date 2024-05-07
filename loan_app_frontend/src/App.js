@@ -1,10 +1,10 @@
 import './App.css';
+import {Component} from "react";
+import Home from "./pages/Home";
 
 function App() {
   return (
-      <div>
-        <h1 className="bg-amber-800">React App</h1>
-      </div>
+      <Home/>
   );
 }
 
