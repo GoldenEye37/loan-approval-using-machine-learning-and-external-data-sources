@@ -17,34 +17,27 @@ export default function Loans() {
     // handle formData changes
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    }
-
-    const handleChange2 = (e) => {
-        const { name, value } = e.target;
         setFormData((prevData) => ({
-            ...formData,
+            ...prevData,
             [name]: value
         }));
     }
 
     // handle form submission
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault(); // prevent default form submission
-    //
-    //     try {
-    //         const response = await axios.post(
-    //             '/loans/predict',
-    //             formData
-    //         );
-    //         console.log(response);
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // prevent default form submission
+        // send form data to the server
+        console.log("sending data to the server...");
+        try {
+            const response = await axios.post(
+                '/loans/predict',
+                formData
+            );
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     // reset form data
     const resetFormData = () => {
@@ -59,16 +52,6 @@ export default function Loans() {
         });
     }
 
-    async function loanApproval() {
-        try {
-            const response = await axios.post(
-                '/loans/predict'
-            );
-            console.log(response);
-        } catch (error) {
-            console.error(error);
-        }
-    }
     return (
         <div className="bg-white h-screen">
             <div className="relative h-full isolate overflow-hidden  bg-gradient-to-b from-indigo-500/20 pt-14">
@@ -86,7 +69,10 @@ export default function Loans() {
                                 application. NB: Please provide accurate information.</p>
                         </div>
 
-                        <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+                        <form
+                            onSubmit={handleSubmit}
+                            className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+                        >
                             <div className="px-4 py-6 sm:p-8">
                                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                                     {/*Company name*/}
