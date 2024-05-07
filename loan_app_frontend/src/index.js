@@ -4,9 +4,9 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Home from "./pages/Home";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Root from "./routes/root";
 import App from "./App";
 import NotFoundErrorPage from "./pages/NotFoundErrorPage";
+import Loans from "./pages/loans";
 
 
 // first thing is to create a BrowserRouter instance using the createBrowserRouter function
@@ -18,7 +18,12 @@ const router = createBrowserRouter([
         element: <App />,
         errorElement: <NotFoundErrorPage />,
         children: [
-        { path: 'loan-approval', element: <Home /> },
+            {   path: 'home',
+                element: <Home />
+            },
+            {   path: 'loans',
+                element: <Loans />
+            }
         ],
     },
     ]);
@@ -27,7 +32,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />
-    {/*<App />*/}
   </React.StrictMode>
 );
 
