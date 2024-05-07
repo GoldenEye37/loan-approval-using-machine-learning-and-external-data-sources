@@ -26,6 +26,20 @@ export default function Loans() {
     // handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault(); // prevent default form submission
+
+        // transform form data to JSON
+        {
+        const formData = JSON.stringify({
+            company_name: formData.company_name,
+            gross_approval: formData.gross_approval,
+            term: formData.term,
+            number_of_employees: formData.number_of_employees,
+            new_business: formData.new_business === "True" ? 1.0 : 2.0,
+            urban: formData.location === "Urban" ? 1 : 0,
+            industry: formData.industry
+        });
+        }
+
         // send form data to the server
         console.log("sending data to the server...");
         try {
