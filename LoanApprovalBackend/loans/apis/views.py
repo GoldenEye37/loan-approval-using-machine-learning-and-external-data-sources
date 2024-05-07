@@ -51,6 +51,8 @@ class PredictLoanAPIView(APIView):
 
                 data = payload.data
 
+                logger.info(f"Loan: data -> {data}")
+
                 # unpack data
                 company_name = data['company_name']
                 gross_approval = data['gross_approval']
@@ -58,14 +60,14 @@ class PredictLoanAPIView(APIView):
                 number_of_employees = data['number_of_employees']
                 new_business = data['new_business']
                 urban = data['urban']
-                industry = data['industry']
+                industry = data['industry_name']
 
-
+                logger.info(f"Loan: data unpacked successfully -> {industry}")
                 # check if industry exists
                 industry = Industry.objects.filter(name=industry).first()
                 logger.info(f"Loan: industry: -> {industry}")
 
-                if not industry:
+                if industry is None:
                     return JsonResponse({
                         'status_code': 400,
                         'message': "Industry not found",
@@ -81,16 +83,18 @@ class PredictLoanAPIView(APIView):
                 # dummy industry trend
                 industry_trends = 'positive'
 
+                # get industry instance from database
+                industry = Industry.objects.get(industry_id=industry.industry_id)
+
                 # create loan instance
-                loan = Loan.objects.create(
-                    company_name=company_name,
-                    gross_approval=gross_approval,
-                    term=term,
-                    number_of_employees=number_of_employees,
-                    new_business=new_business,
-                    urban=urban,
-                    industry=industry,
-                )
+                loan = Loan()
+                loan.company_name = company_name
+                loan.gross_approval = gross_approval
+                loan.term = term
+                loan.number_of_employees = number_of_employees
+                loan.new_business = new_business
+                loan.urban = urban
+                loan.industry = industry
 
                 # predict loan
                 logger.info(f"Loan: prepare data for prediction -> {company_name}")
@@ -101,7 +105,7 @@ class PredictLoanAPIView(APIView):
                     data["number_of_employees"],
                     data["new_business"],
                     data["urban"],
-                    data["industry"],
+                    data["industry_name"],
                     industry_trends
                 ]
                 logger.info(f"Loan: loan data ->  {loans_data}")

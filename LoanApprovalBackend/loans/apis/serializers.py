@@ -4,6 +4,9 @@ from loans.models import Loan
 
 
 class LoanSerializer(serializers.ModelSerializer):
+
+    industry_name = serializers.CharField(required=True)
+
     class Meta:
         fields = [
             'company_name',
@@ -12,9 +15,7 @@ class LoanSerializer(serializers.ModelSerializer):
             'number_of_employees',
             'new_business',
             'urban',
-            # 'industry',
+            'industry_name',
             ]
         model = Loan
-
-        industry = serializers.CharField(required=True)
 

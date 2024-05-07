@@ -41,7 +41,8 @@ class Loan(models.Model):
     number_of_employees = models.IntegerField(null=False, blank=False)
     new_business = models.IntegerField(null=False, blank=False)
     urban = models.BooleanField(default=False, null=False, blank=False)
-    industry = models.ForeignKey("loans.Industry", on_delete=models.DO_NOTHING, null=False, blank=False)
+    industry = models.ForeignKey("loans.Industry", on_delete=models.DO_NOTHING, null=False, blank=False,
+                                 related_name='loans')
     mis_status = models.CharField(max_length=255,
                                   null=True, blank=True,
                                   choices=MIS_Status.choices,
