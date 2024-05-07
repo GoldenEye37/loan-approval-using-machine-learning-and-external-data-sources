@@ -4,28 +4,60 @@ import React from "react";
 
 export default function Loans() {
 
-    const industries = [
-          'Agriculture, forestry, fishing, hunting',
-          'Mining, quarrying, oil and gas extraction',
-          'Utilities',
-          'Construction',
-          'Manufacturing',
-          'Wholesale_trade',
-          'Retail_trade',
-          'Transportation, warehousing',
-          'Information',
-          'Finance, Insurance',
-          'Real estate, rental, leasing',
-          'Professional, scientific, technical services',
-          'Management of companies, enterprises',
-          'Administrative support, waste management',
-          'Educational',
-          'Healthcare, Social_assist',
-          'Arts, Entertain, recreation',
-          'Accomodation, Food services',
-          'Other services',
-          'Public adminstration',
-    ];
+    const [formData, setFormData] = React.useState({
+        company_name: "",
+        gross_approval: "",
+        location: "",
+        industry: "",
+        term: "",
+        number_of_employees: "",
+        new_business: ""
+    });
+
+    // handle formData changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    }
+
+    const handleChange2 = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...formData,
+            [name]: value
+        }));
+    }
+
+    // handle form submission
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault(); // prevent default form submission
+    //
+    //     try {
+    //         const response = await axios.post(
+    //             '/loans/predict',
+    //             formData
+    //         );
+    //         console.log(response);
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
+
+    // reset form data
+    const resetFormData = () => {
+        setFormData({
+            company_name: "",
+            gross_approval: "",
+            location: "",
+            industry: "",
+            term: "",
+            number_of_employees: "",
+            new_business: ""
+        });
+    }
 
     async function loanApproval() {
         try {
@@ -68,6 +100,8 @@ export default function Loans() {
                                                 type="text"
                                                 name="company-name"
                                                 id="compay-name"
+                                                value={formData.company_name}
+                                                onChange={handleChange}
                                                 autoComplete="given-name"
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900
                                                  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
@@ -90,6 +124,8 @@ export default function Loans() {
                                                 type="Number"
                                                 name="gross-approval"
                                                 id="gross-approval"
+                                                value={formData.gross_approval}
+                                                onChange={handleChange}
                                                 autoComplete=""
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900
                                                  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
@@ -111,6 +147,8 @@ export default function Loans() {
                                             <select
                                                 id="location"
                                                 name="location"
+                                                value={formData.location}
+                                                onChange={handleChange}
                                                 autoComplete=""
                                                 className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900
                                                 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset
@@ -126,10 +164,11 @@ export default function Loans() {
                                     {/*industry*/}
 
                                     <IndustrySelect
-                                        // selectedIndustry={formData.industry}
-                                        // onIndustryChange={(e) => {
-                                        //   handleChange(e); // Update form data with the selected industry
-                                        // }}
+                                        selectedIndustry={formData.industry}
+                                        handleChange={(e) => handleChange({
+                                            name: 'industry',
+                                            value: e.target.value
+                                        })}
                                      />
 
                                     {/*Term*/}
@@ -146,6 +185,8 @@ export default function Loans() {
                                                 id="term"
                                                 name="term"
                                                 type="Number"
+                                                value={formData.term}
+                                                onChange={handleChange}
                                                 autoComplete=""
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900
                                                  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
@@ -156,7 +197,6 @@ export default function Loans() {
                                     </div>
 
                                     {/*Number of employees*/}
-
 
                                     <div className="sm:col-span-4">
                                         <label htmlFor="number_of_employees"
@@ -169,6 +209,8 @@ export default function Loans() {
                                                 id="number_of_employees"
                                                 name="number_of_employees"
                                                 type="Number"
+                                                value={formData.number_of_employees}
+                                                onChange={handleChange}
                                                 autoComplete=""
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900
                                                 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
@@ -191,6 +233,8 @@ export default function Loans() {
                                             <select
                                                 id="new_business"
                                                 name="new_business"
+                                                value={formData.new_business}
+                                                onChange={handleChange}
                                                 autoComplete=""
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                             >
@@ -202,9 +246,13 @@ export default function Loans() {
 
                                 </div>
                             </div>
+
+                            {/*Form submission */}
                             <div
                                 className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 px-4 py-4 sm:px-8">
-                                <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
+                                <button type="button" className="text-sm font-semibold leading-6 text-gray-900"
+                                        onClick={resetFormData}
+                                >
                                     Cancel
                                 </button>
                                 <button
