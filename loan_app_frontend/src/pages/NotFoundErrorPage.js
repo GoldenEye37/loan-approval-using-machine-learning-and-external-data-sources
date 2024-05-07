@@ -1,3 +1,4 @@
+import {Link} from "react-router-dom";
 
 
 export default function NotFoundErrorPage() {
@@ -12,14 +13,14 @@ export default function NotFoundErrorPage() {
                 <p className="mt-6 text-base leading-7 text-gray-400">Sorry, we couldn’t find the page you’re looking
                     for.</p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
-                    <a
-                        href="#"
+                    <Link
+                        to="/home"
                         className="self-center rounded-full align-middle bg-gradient-to-r from-indigo-600 to-pink-500 px-5 py-3 text-sm font-semibold
                     text-white shadow-sm drop-shadow-md hover:drop-shadow-2xl focus-visible:outline focus-visible:outline-2
                     focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                         Go to Home
-                    </a>
+                    </Link>
                 </div>
             </div>
         </main>)
