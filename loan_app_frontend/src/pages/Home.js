@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import {Link} from "react-router-dom";
 
 
 export default function Home() {
@@ -27,14 +28,15 @@ export default function Home() {
                 also promotes transparency and fairness taking into consideration how a certain industry is performing.
               </p>
               <div className="mt-10 flex items-stretch gap-x-6">
-                <a
+                <Link
+                    to={"/loans"}
                     href="#"
                     className="self-center rounded-full align-middle bg-gradient-to-r from-indigo-600 to-pink-500 px-5 py-3 text-sm font-semibold
                     text-white shadow-sm drop-shadow-md hover:drop-shadow-2xl focus-visible:outline focus-visible:outline-2
                     focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Approve Loan
-                </a>
+                </Link>
                 {/*<a href="#" className="text-sm font-semibold leading-6 text-gray-900">*/}
                 {/*  Learn more <span aria-hidden="true">→</span>*/}
                 {/*</a>*/}
