@@ -35,10 +35,10 @@ export default function Loans() {
         // transform form data to JSON
         const jsonformData = JSON.stringify({
             company_name: formData.company_name,
-            gross_approval: formData.gross_approval,
-            term: formData.term,
-            number_of_employees: formData.number_of_employees,
-            new_business: formData.new_business === "True" ? 1.0 : 2.0,
+            gross_approval: parseInt(formData.gross_approval),
+            term: parseInt(formData.term),
+            number_of_employees: parseInt(formData.number_of_employees),
+            new_business: formData.new_business === "True" ? parseFloat(1.0.toFixed(1)) : parseFloat(2.0.toFixed(1)),
             urban: formData.location === "Urban" ? 1 : 0,
             industry: formData.industry
         });
@@ -89,7 +89,7 @@ export default function Loans() {
                     origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
                     aria-hidden="true"
                 />
-                    <div className="mx-64 grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+                    <div className="mx-64 md:mx-32 sm:mx-8 grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
                         <div className="px-4 sm:px-0">
                             <h2 className="text-2xl font-extrabold leading-7
                                bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
