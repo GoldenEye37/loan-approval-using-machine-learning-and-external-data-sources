@@ -12,7 +12,9 @@ class LoanSerializer(serializers.ModelSerializer):
             'number_of_employees',
             'new_business',
             'urban',
-            'industry',
+            # 'industry',
             ]
         model = Loan
+
+        industry = serializers.CharField(required=True)
 
