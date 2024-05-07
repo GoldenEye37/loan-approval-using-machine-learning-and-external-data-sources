@@ -40,7 +40,7 @@ export default function Loans() {
             number_of_employees: parseInt(formData.number_of_employees),
             new_business: formData.new_business === "True" ? parseFloat(1.0.toFixed(1)) : parseFloat(2.0.toFixed(1)),
             urban: formData.location === "Urban" ? 1 : 0,
-            industry: formData.industry
+            industry_name: formData.industry
         });
 
         console.log("Json form data = ", jsonformData);
@@ -50,7 +50,7 @@ export default function Loans() {
         try {
             const response = await axios.post(
                 '/loans/predict',
-                formData
+                jsonformData
             );
 
             // handle response
