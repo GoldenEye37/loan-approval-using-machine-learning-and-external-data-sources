@@ -5,6 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import Home from "./pages/Home";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Root from "./routes/root";
+import App from "./App";
+import NotFoundErrorPage from "./pages/NotFoundErrorPage";
 
 
 // first thing is to create a BrowserRouter instance using the createBrowserRouter function
@@ -13,7 +15,8 @@ import Root from "./routes/root";
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Root />,
+        element: <App />,
+        errorElement: <NotFoundErrorPage />,
         children: [
         { path: 'loan-approval', element: <Home /> },
         ],
