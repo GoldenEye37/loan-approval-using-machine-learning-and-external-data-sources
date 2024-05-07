@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Home from "./pages/Home";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import Root from "./routes/root";
 import ErrorPage from "./pages/ErrorPage";
+import App from "./App";
+import LoanPage from "./pages/LoanPage";
 
 
 // first thing is to create a BrowserRouter instance using the createBrowserRouter function
@@ -14,10 +14,10 @@ import ErrorPage from "./pages/ErrorPage";
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <Root />,
+        element: <App />,
         errorElement: <ErrorPage />,
         children: [
-        { path: 'loan-approval', element: <Home /> },
+        { path: 'loan-approval', element: <LoanPage /> },
         ],
     },
     ]);
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    {/*<App />*/}
+    {/*<RouterProvider router={router} />*/}
+    <App />
   </React.StrictMode>
 );
 
