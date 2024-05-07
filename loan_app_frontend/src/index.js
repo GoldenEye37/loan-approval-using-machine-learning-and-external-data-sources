@@ -1,13 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Home from "./pages/Home";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import Root from "./routes/root";
+
+
+// first thing is to create a BrowserRouter instance using the createBrowserRouter function
+// from react-router-dom. This function takes an array of route objects as an argument.
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Root />,
+        children: [
+        { path: 'loan-approval', element: <Home /> },
+        ],
+    },
+    ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
+    {/*<App />*/}
   </React.StrictMode>
 );
 
