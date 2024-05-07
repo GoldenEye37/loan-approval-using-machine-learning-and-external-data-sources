@@ -1,21 +1,40 @@
-
-
-
-/*
-
-    form fields
-
-    'company_name',
-    'gross_approval',
-    'term',
-    'number_of_employees',
-    'new_business',
-    'urban',
-    'industry',
-
-* */
+import axios from "../api/axios";
 
 export default function Loans() {
+
+    const industries = [
+          'Agriculture, forestry, fishing, hunting',
+          'Mining, quarrying, oil and gas extraction',
+          'Utilities',
+          'Construction',
+          'Manufacturing',
+          'Wholesale_trade',
+          'Retail_trade',
+          'Transportation, warehousing',
+          'Information',
+          'Finance, Insurance',
+          'Real estate, rental, leasing',
+          'Professional, scientific, technical services',
+          'Management of companies, enterprises',
+          'Administrative support, waste management',
+          'Educational',
+          'Healthcare, Social_assist',
+          'Arts, Entertain, recreation',
+          'Accomodation, Food services',
+          'Other services',
+          'Public adminstration',
+    ];
+
+    async function loanApproval() {
+        try {
+            const response = await axios.post(
+                '/loans/predict'
+            );
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
     return (
         <div className="bg-white h-screen">
             <div className="relative h-full isolate overflow-hidden  bg-gradient-to-b from-indigo-500/20 pt-14">
@@ -50,7 +69,7 @@ export default function Loans() {
                                                 autoComplete="given-name"
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900
                                                  shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
-                                                  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm
+                                                  focus:ring-2 focus:ring-inset focus:ring-pink-400 sm:text-sm
                                                    sm:leading-6"
                                             />
                                         </div>
@@ -116,7 +135,7 @@ export default function Loans() {
                                                 autoComplete=""
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                             >
-                                                <option>Urban</option>
+                                                <option className="">Urban</option>
                                                 <option>Rural</option>
                                             </select>
                                         </div>
