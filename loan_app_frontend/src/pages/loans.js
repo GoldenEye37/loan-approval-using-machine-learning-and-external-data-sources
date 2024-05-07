@@ -1,7 +1,6 @@
 import axios from "../api/axios";
 import IndustrySelect from "../components/IndustrySelect";
 import React from "react";
-import {json} from "react-router-dom";
 
 export default function Loans() {
 
@@ -18,15 +17,20 @@ export default function Loans() {
     // handle formData changes
     const handleChange = (e) => {
         const { name, value } = e.target;
+
         setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
+        ...prevData,
+        [name]: value,
         }));
-    }
+    };
+
 
     // handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault(); // prevent default form submission
+
+        // log
+        console.log("formData before transformation = ", formData);
 
         // transform form data to JSON
         const jsonformData = JSON.stringify({
@@ -39,7 +43,7 @@ export default function Loans() {
             industry: formData.industry
         });
 
-        console.log("formData = ", jsonformData);
+        console.log("Json form data = ", jsonformData);
 
         // send form data to the server
         console.log("sending data to the server...");
@@ -175,12 +179,18 @@ export default function Loans() {
                                     {/*industry*/}
 
                                     <IndustrySelect
-                                        selectedIndustry={formData.industry}
-                                        handleChange={(e) => handleChange({
-                                            name: 'industry',
-                                            value: e.target.value
-                                        })}
-                                     />
+                                          selectedIndustry={formData.industry}
+                                          onIndustryChange={(e) => {
+                                            if (e && e.target) {
+                                              handleChange({
+                                                target: {
+                                                  name: 'industry',
+                                                  value: e.target.value,
+                                                },
+                                              });
+                                            }
+                                          }}
+                                    />
 
                                     {/*Term*/}
 
@@ -249,6 +259,7 @@ export default function Loans() {
                                                 autoComplete=""
                                                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                             >
+                                                <option value="">Select</option>
                                                 <option>True</option>
                                                 <option>False</option>
                                             </select>
