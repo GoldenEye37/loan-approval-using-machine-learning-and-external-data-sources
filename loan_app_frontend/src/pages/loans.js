@@ -1,4 +1,6 @@
 import axios from "../api/axios";
+import IndustrySelect from "../components/IndustrySelect";
+import React from "react";
 
 export default function Loans() {
 
@@ -114,6 +116,7 @@ export default function Loans() {
                                                 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset
                                                 focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                             >
+                                                <option value="">Select Location</option>
                                                 <option>Urban</option>
                                                 <option>Rural</option>
                                             </select>
@@ -122,24 +125,12 @@ export default function Loans() {
 
                                     {/*industry*/}
 
-                                    <div className="sm:col-span-3">
-                                        <label htmlFor="industry"
-                                               className="block text-sm font-medium leading-6 text-gray-900">
-                                            Industry
-                                            <span className="text-gray-400"> (pick industry)</span>
-                                        </label>
-                                        <div className="mt-2">
-                                            <select
-                                                id="industry"
-                                                name="industry"
-                                                autoComplete=""
-                                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                                            >
-                                                <option className="">Urban</option>
-                                                <option>Rural</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    <IndustrySelect
+                                        // selectedIndustry={formData.industry}
+                                        // onIndustryChange={(e) => {
+                                        //   handleChange(e); // Update form data with the selected industry
+                                        // }}
+                                     />
 
                                     {/*Term*/}
 
