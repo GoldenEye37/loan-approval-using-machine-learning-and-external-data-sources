@@ -1,6 +1,7 @@
 import axios from "../api/axios";
 import IndustrySelect from "../components/IndustrySelect";
 import React from "react";
+import {json} from "react-router-dom";
 
 export default function Loans() {
 
@@ -28,8 +29,7 @@ export default function Loans() {
         e.preventDefault(); // prevent default form submission
 
         // transform form data to JSON
-        {
-        const formData = JSON.stringify({
+        const jsonformData = JSON.stringify({
             company_name: formData.company_name,
             gross_approval: formData.gross_approval,
             term: formData.term,
@@ -38,7 +38,8 @@ export default function Loans() {
             urban: formData.location === "Urban" ? 1 : 0,
             industry: formData.industry
         });
-        }
+
+        console.log("formData = ", jsonformData);
 
         // send form data to the server
         console.log("sending data to the server...");
@@ -47,9 +48,19 @@ export default function Loans() {
                 '/loans/predict',
                 formData
             );
-            console.log(response);
+
+            // handle response
+            if (response.status === 200) {
+                console.log("Loan application submitted successfully!");
+                console.log(response);
+                resetFormData();
+            }
+            else {
+                console.error("Failed to submit loan application!");
+            }
+
         } catch (error) {
-            console.error(error);
+            console.error("Error: ", error);
         }
     }
 
