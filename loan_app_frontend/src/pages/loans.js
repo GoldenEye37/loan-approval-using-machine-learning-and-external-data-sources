@@ -1,8 +1,11 @@
 import axios from "../api/axios";
 import IndustrySelect from "../components/IndustrySelect";
-import React from "react";
+import { Navigate } from "react-router-dom";
+import React, {useState} from "react";
 
 export default function Loans() {
+
+    const [redirectToError, setRedirectToError] = useState(false);
 
     const [formData, setFormData] = React.useState({
         company_name: "",
@@ -57,15 +60,42 @@ export default function Loans() {
             if (response.status === 200) {
                 console.log("Loan application submitted successfully!");
                 console.log(response);
-                resetFormData();
+                // resetFormData();
+
+                // check if the loan was approved
+                if (response.data.loan_approved) {
+                    console.log("Loan approved!");
+                    // load the modal
+                } else {
+                    console.log("Loan not approved!");
+                }
             }
-            else {
+            else if (response.status === 400) {
+                // handle bad request error
                 console.error("Failed to submit loan application!");
+                console.error(response.data)
+            }
+            else if (response.status === 500) {
+                // handle server error
+                console.error("Failed to submit loan application!");
+                console.error(response.data)
             }
 
         } catch (error) {
-            console.error("Error: ", error);
+            console.error("Error with reaching backend: ", error);
+            // load modal showing error
+            console.log("Error response: ", error)
+            if (error.message === "Network Error") {
+                console.error("Failed to reach the server. Please check your internet connection.");
+                // redirect to error page
+                setRedirectToError(true);
+            }
         }
+    }
+
+    // redirect to error page
+    if (redirectToError) {
+        return <Navigate to="/error" />;
     }
 
     // reset form data
@@ -82,14 +112,14 @@ export default function Loans() {
     }
 
     return (
-        <div className="bg-white h-screen">
+        <div className="bg-white h-screen md:h-auto sm:h-auto">
             <div className="relative h-full isolate overflow-hidden  bg-gradient-to-b from-indigo-500/20 pt-14">
                 <div
                     className="w-full h absolute inset-y-0 right-1/2 -z-10 -mr-96
                     origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
                     aria-hidden="true"
                 />
-                    <div className="mx-64 md:mx-32 sm:mx-8 grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+                    <div className="mx-64 md:mx-32 sm:mx-1 grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
                         <div className="px-4 sm:px-0">
                             <h2 className="text-2xl font-extrabold leading-7
                                bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
