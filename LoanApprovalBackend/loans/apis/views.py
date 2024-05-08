@@ -134,6 +134,7 @@ class PredictLoanAPIView(APIView):
                         return JsonResponse({
                             'status_code': 200,
                             'message': 'Loan approved',
+                            'loan_approved': True,
                             'success': True
                         }, status=200)
                     else:
@@ -144,6 +145,7 @@ class PredictLoanAPIView(APIView):
                         return JsonResponse({
                             'status_code': 200,
                             'message': 'Loan denied',
+                            'loan_approved': False,
                             'success': True
                         }, status=200)
                 except Exception as e:
