@@ -112,14 +112,14 @@ export default function Loans() {
     }
 
     return (
-        <div className="bg-white h-screen md:h-auto sm:h-auto">
+        <div className="bg-white h-screen md:h-auto mobile:h-auto">
             <div className="relative h-full isolate overflow-hidden  bg-gradient-to-b from-indigo-500/20 pt-14">
                 <div
-                    className="w-full h absolute inset-y-0 right-1/2 -z-10 -mr-96
+                    className="w-full  absolute inset-y-0 right-1/2 -z-10 -mr-96
                     origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:-mr-80 lg:-mr-96"
                     aria-hidden="true"
                 />
-                    <div className="mx-64 md:mx-32 sm:mx-1 grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+                    <div className="mx-64 md:mx-32 sm:mx-4 mobile:mx-0.5 grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
                         <div className="px-4 sm:px-0">
                             <h2 className="text-2xl font-extrabold leading-7
                                bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
