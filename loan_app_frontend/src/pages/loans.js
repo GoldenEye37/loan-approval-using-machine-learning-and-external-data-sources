@@ -3,13 +3,19 @@ import IndustrySelect from "../components/IndustrySelect";
 import { Navigate } from "react-router-dom";
 import React, {useState} from "react";
 import Modal from "../components/Modal";
+import Notification from "../components/Notification";
 
 export default function Loans() {
 
     const [redirectToError, setRedirectToError] = useState(false);
 
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoanApproved, setIsLoanApproved] = useState(false);
+
+    const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+    const [backendError, setBackendError] = useState("");
 
     const [formData, setFormData] = React.useState({
         company_name: "",
@@ -64,7 +70,7 @@ export default function Loans() {
             if (response.status === 200) {
                 console.log("Loan application submitted successfully!");
                 console.log(response.data);
-                resetFormData();
+                // resetFormData();
                 // load modal showing success
                 setIsLoanApproved(response.data.loan_approved);
                 setIsModalOpen(true);
@@ -73,10 +79,13 @@ export default function Loans() {
                 // handle bad request error
                 console.error("Failed to submit loan application! Check your form data.");
                 console.error(response.data)
+                // show notification
+                setIsNotificationOpen(true);
+                setBackendError(response.data.message);
             }
             else if (response.status === 500) {
                 // handle server error
-                console.error("Server error, please contact support!");
+                console.error("Server error, please contact support for assistance!");
                 console.error(response.data)
             }
 
@@ -111,9 +120,8 @@ export default function Loans() {
     }
 
     return (
-        <div className="bg-white h-screen md:h-auto mobile:h-auto">
-
-            {/*// Modal*/}
+        <div className="bg-white h-screen md:h-auto mobile:h-auto static">
+             {/*// Modal*/}
             <Modal
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
@@ -123,6 +131,12 @@ export default function Loans() {
             {/*// Main content*/}
             <div
                 className="relative h-full isolate overflow-hidden  bg-gradient-to-b from-indigo-500/20 pt-14">
+                {/*Notification*/}
+                 <Notification
+                    isNotificationOpen={isNotificationOpen}
+                    setIsNotificationOpen={setIsNotificationOpen}
+                    backendError={backendError}
+                 />
                 <div
                     className="h-full w-full items-center absolute inset-y-0 right-1/2 -z-10 -mr-96
                     origin-top-right skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1
@@ -139,15 +153,19 @@ export default function Loans() {
                             <p className="mt-1 text-sm leading-6 text-gray-400">Fill in this form to process a loan
                                 application. NB: Please provide accurate information.</p>
 
-                            <div className="flex flex-row items-center content-center mt-12 space-x-2">
+                            <button className={`flex flex-row items-center content-center mt-12 space-x-2 text-sm
+                                                 ${isButtonClicked ? "underline text-purple-800" : "text-gray-400"}`}
+                                    onClick={() => setIsButtonClicked(true)}
+                                    onPointerLeave={() => setIsButtonClicked(false)}
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                                     stroke="currentColor" className="w-6 h-6 text-gray-400 focus:text-pink-500">
+                                     stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round"
                                           d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
                                     />
                                 </svg>
-                                <p className="text-sm text-gray-400 underline focus:underline focus:text-pink-500">go back to home</p>
-                            </div>
+                                go back to home
+                            </button>
                         </div>
 
                         <form
