@@ -22,15 +22,7 @@ from loans.services.fetch_industry_trend import fetch_industry_trends
 class PredictLoanAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = LoanSerializer
-    """GrAppv           687973 non-null  float64
- 1   Term             687973 non-null  int64  
- 2   NoEmp            687973 non-null  int64  
- 3   NewExist         687973 non-null  float64
- 4   UrbanRural       687973 non-null  int64  
- 5   Industry         687973 non-null  int8   
- 6   Industry Trends  687973 non-null  int8   
- 7   MIS_Status
-    """
+
     def post(self, request):
         try:
             payload = LoanSerializer(data=request.data)
@@ -70,7 +62,7 @@ class PredictLoanAPIView(APIView):
                 if industry is None:
                     return JsonResponse({
                         'status_code': 400,
-                        'message': "Industry not found",
+                        'message': "The industry you provided was not found",
                         'success': False
                     }, status=400)
 
