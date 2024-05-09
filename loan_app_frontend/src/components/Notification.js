@@ -1,9 +1,18 @@
-import { Fragment, useState } from 'react'
+import {Fragment, useEffect, useState,} from 'react'
 import { Transition } from '@headlessui/react'
 import {CheckCircleIcon, ExclamationTriangleIcon} from '@heroicons/react/24/outline'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 
-export default function Notification({isNotificationOpen, setIsNotificationOpen, backendError}) {
+export default function Notification({isNotificationOpen, setIsNotificationOpen,errorTitle, backendError}) {
+
+  useEffect(() => {
+    if (isNotificationOpen){
+      const  timer = setTimeout(() => {
+        setIsNotificationOpen(false)
+      }, 5000);
+          return () => clearTimeout(timer);
+    }
+  }, [isNotificationOpen, setIsNotificationOpen]);
 
   return (
       <div
@@ -29,7 +38,7 @@ export default function Notification({isNotificationOpen, setIsNotificationOpen,
                     <ExclamationTriangleIcon className="h-6 w-6 text-red-400 rounded-full" aria-hidden="true" />
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
-                    <p className="text-sm font-medium text-red-500">Bad Request!</p>
+                    <p className="text-sm font-medium text-red-500">{errorTitle}</p>
                     <p className="mt-1 text-sm text-gray-500">{backendError}</p>
                   </div>
                   <div className="ml-4 flex flex-shrink-0">

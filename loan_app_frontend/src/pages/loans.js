@@ -15,7 +15,9 @@ export default function Loans() {
     const [isLoanApproved, setIsLoanApproved] = useState(false);
 
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-    const [backendError, setBackendError] = useState("");
+    const [errorTitle, setErrorTitle] = useState("Error");
+    const [backendError, setBackendError] = useState("dummy error message, fix me!");
+
 
     const [formData, setFormData] = React.useState({
         company_name: "",
@@ -80,13 +82,18 @@ export default function Loans() {
                 console.error("Failed to submit loan application! Check your form data.");
                 console.error(response.data)
                 // show notification
-                setIsNotificationOpen(true);
+                setErrorTitle("Bad Request!");
                 setBackendError(response.data.message);
+                setIsNotificationOpen(true);
             }
             else if (response.status === 500) {
                 // handle server error
                 console.error("Server error, please contact support for assistance!");
                 console.error(response.data)
+                // show notification
+                setErrorTitle("Server Error!");
+                setBackendError(response.data.message);
+                setIsNotificationOpen(true);
             }
 
         } catch (error) {
@@ -135,6 +142,7 @@ export default function Loans() {
                  <Notification
                     isNotificationOpen={isNotificationOpen}
                     setIsNotificationOpen={setIsNotificationOpen}
+                    errorTitle={errorTitle}
                     backendError={backendError}
                  />
                 <div
