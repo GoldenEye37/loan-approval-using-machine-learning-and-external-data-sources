@@ -18,6 +18,8 @@ export default function Loans() {
     const [errorTitle, setErrorTitle] = useState("Error");
     const [backendError, setBackendError] = useState("dummy error message, fix me!");
 
+    const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
 
     const [formData, setFormData] = React.useState({
         company_name: "",
@@ -43,6 +45,46 @@ export default function Loans() {
     // handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault(); // prevent default form submission
+
+        setIsFormSubmitted(true);
+
+        // validate form data
+    if (!formData.company_name || !formData.gross_approval || !formData.location || !formData.industry || !formData.term || !formData.number_of_employees || !formData.new_business) {
+        console.error("Please fill in all the fields!");
+        // show notification
+        setErrorTitle("Error!");
+        setBackendError("Please fill in all the fields!");
+        setIsNotificationOpen(true);
+        return;
+    }
+
+    if (formData.gross_approval <= 0 || formData.gross_approval > 10000000) {
+        console.error("Gross approval must be greater than 0 and less than or equal to 10000000!");
+        // show notification
+        setErrorTitle("Error!");
+        setBackendError("Gross approval must be greater than 0 and less than or equal to 10000000!");
+        setIsNotificationOpen(true);
+        return;
+    }
+
+    if (formData.term <= 0 || formData.term > 1000) {
+        console.error("Term must be greater than 0 and less than or equal to 1000!");
+        // show notification
+        setErrorTitle("Error!");
+        setBackendError("Term must be greater than 0 and less than or equal to 1000!");
+        setIsNotificationOpen(true);
+        return;
+    }
+
+    if (formData.number_of_employees <= 0 || formData.number_of_employees > 500000) {
+        console.error("Number of employees must be greater than 0 and less than or equal to 500000!");
+        // show notification
+        setErrorTitle("Error!");
+        setBackendError("Number of employees must be greater than 0 and less than or equal to 500000!");
+        setIsNotificationOpen(true);
+        return;
+    }
+
 
         // log
         console.log("formData before transformation = ", formData);
@@ -72,38 +114,32 @@ export default function Loans() {
             if (response.status === 200) {
                 console.log("Loan application submitted successfully!");
                 console.log(response.data);
-                // resetFormData();
+                resetFormData();
                 // load modal showing success
                 setIsLoanApproved(response.data.loan_approved);
                 setIsModalOpen(true);
             }
-            else if (response.status === 400) {
-                // handle bad request error
-                console.error("Failed to submit loan application! Check your form data.");
-                console.error(response.data)
-                // show notification
-                setErrorTitle("Bad Request!");
-                setBackendError(response.data.message);
-                setIsNotificationOpen(true);
-            }
-            else if (response.status === 500) {
-                // handle server error
-                console.error("Server error, please contact support for assistance!");
-                console.error(response.data)
-                // show notification
-                setErrorTitle("Server Error!");
-                setBackendError(response.data.message);
-                setIsNotificationOpen(true);
-            }
-
         } catch (error) {
             console.error("Error with reaching backend: ", error);
             // // redirect to error page
-            console.log("Error response: ", error)
+            console.log("Error response: ", error.response.data);
             if (error.message === "Network Error") {
                 console.error("Failed to reach the server. Please check your internet connection.");
                 // redirect to error page
                 setRedirectToError(true);
+            }
+            else if (error.response.data.status_code === 400){
+                setErrorTitle("Bad Request!");
+                setBackendError(error.response.data.message);
+                setIsNotificationOpen(true);
+            }
+            else if (error.response.data.status_code === 500) {
+                // handle server error
+                console.error("Server error, please contact support for assistance!");
+                resetFormData();
+                setErrorTitle("Server Error!");
+                setBackendError(error.response.data.message);
+                setIsNotificationOpen(true);
             }
         }
     }
@@ -193,10 +229,13 @@ export default function Loans() {
                                                 type="text"
                                                 name="company_name"
                                                 id="company_name"
+                                                placeholder={`${isFormSubmitted && !formData.company_name ? "Please fill in this field" : ""}`}
                                                 value={formData.company_name}
                                                 onChange={handleChange}
                                                 autoComplete="given-name"
-                                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                className={`block w-full rounded-md border-0 py-1.5 text-gray-900
+                                                 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
+                                                  focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                                             />
                                         </div>
                                     </div>
@@ -212,6 +251,7 @@ export default function Loans() {
                                                 type="Number"
                                                 name="gross_approval"
                                                 id="gross_approval"
+                                                placeholder={`${isFormSubmitted && !formData.company_name ? "Please fill in this field" : ""}`}
                                                 value={formData.gross_approval}
                                                 onChange={handleChange}
                                                 autoComplete=""
@@ -279,6 +319,7 @@ export default function Loans() {
                                                 id="term"
                                                 name="term"
                                                 type="Number"
+                                                placeholder={`${isFormSubmitted && !formData.term ? "Please fill in this field" : ""}`}
                                                 value={formData.term}
                                                 onChange={handleChange}
                                                 autoComplete=""
@@ -303,6 +344,7 @@ export default function Loans() {
                                                 id="number_of_employees"
                                                 name="number_of_employees"
                                                 type="Number"
+                                                placeholder={`${isFormSubmitted && !formData.number_of_employees ? "Please fill in this field" : ""}`}
                                                 value={formData.number_of_employees}
                                                 onChange={handleChange}
                                                 autoComplete=""
